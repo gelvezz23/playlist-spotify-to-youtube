@@ -112,14 +112,28 @@ export function extractPlaylistId(input) {
   return /^[a-zA-Z0-9]{22}$/.test(value) ? value : null;
 }
 
-async function api(token, path) {
-  const res = await fetch(`https://api.spotify.com/v1${path}`, {
+async function spotifyFetch(token, url) {
+  const res = await fetch(url, {
     headers: { Authorization: `Bearer ${token}` },
   });
-  const data = await res.json().catch(() => ({}));
-  if (!res.ok)
-    throw new Error(data.error?.message || `Spotify error ${res.status}`);
-  return data;
+  const text = await res.text();
+  if (!res.ok) {
+    let msg = text;
+    try {
+      const data = JSON.parse(text);
+      msg =
+        data.error?.message ||
+        data.message ||
+        data.error_description ||
+        (typeof data.error === "string" ? data.error : text);
+    } catch {}
+    throw new Error(msg || `Spotify error ${res.status}`);
+  }
+  return JSON.parse(text);
+}
+
+async function api(token, path) {
+  return spotifyFetch(token, `https://api.spotify.com/v1${path}`);
 }
 
 export async function fetchPlaylist(token, playlistId) {
@@ -131,17 +145,7 @@ export async function fetchPlaylist(token, playlistId) {
   let next = `/playlists/${playlistId}/items?limit=100&fields=items(item(id,name,type,is_local,artists(name),duration_ms)),next`;
   while (next) {
     const page = next.startsWith("http")
-      ? await (async () => {
-          const res = await fetch(next, {
-            headers: { Authorization: `Bearer ${token}` },
-          });
-          const data = await res.json().catch(() => ({}));
-          if (!res.ok)
-            throw new Error(
-              data.error?.message || `Spotify error ${res.status}`,
-            );
-          return data;
-        })()
+      ? await spotifyFetch(token, next)
       : await api(token, next);
     for (const { item } of page.items || []) {
       if (!item || item.type !== "track") continue;
