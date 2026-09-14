@@ -1,0 +1,33 @@
+:root {
+  --bg: #0f1115;
+  --card: #171a21;
+  --border: #262b36;
+  --text: #c9d1d9;
+  --text-h: #f0f3f6;
+  --muted: #8b949e;
+  --green: #3fb950;
+  --red: #f85149;
+  --yellow: #d29922;
+  --accent: #1db954;
+
+  font:
+    16px/1.5 system-ui,
+    "Segoe UI",
+    Roboto,
+    sans-serif;
+  color: var(--text);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+}
+
+#root {
+  min-height: 100svh;
+}
