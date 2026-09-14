@@ -104,11 +104,11 @@ export async function getSpotifyToken() {
 }
 
 export function extractPlaylistId(input) {
-  const value = input.trim();
-  const uri = value.match(/spotify:playlist:([a-zA-Z0-9]+)/);
-  if (uri) return uri[1];
-  const url = value.match(/playlist\/([a-zA-Z0-9]+)/);
-  if (url) return url[1];
+  const value = input.trim().replace(/[\u200B-\u200F\uFEFF]/g, "");
+  const match =
+    value.match(/spotify:playlist:([a-zA-Z0-9]+)/i) ||
+    value.match(/\/playlist\/([a-zA-Z0-9]+)/i);
+  if (match) return match[1];
   return /^[a-zA-Z0-9]{22}$/.test(value) ? value : null;
 }
 
