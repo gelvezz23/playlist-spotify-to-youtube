@@ -16,8 +16,8 @@ import {
 } from "./youtube";
 import { bestMatch } from "./matching";
 
-const SPOTIFY_ID = import.meta.env.VITE_SPOTIFY_CLIENT_ID;
-const GOOGLE_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+const SPOTIFY_ID = import.meta.env.SPOTIFY_CLIENT_ID;
+const GOOGLE_ID = import.meta.env.GOOGLE_CLIENT_ID;
 
 const STATUS = {
   pending: { label: "Pendiente", cls: "pending" },
@@ -147,8 +147,8 @@ export default function App() {
       {(!SPOTIFY_ID || !GOOGLE_ID) && (
         <div className="banner">
           Falta configurar <code>.env</code>: copia <code>.env.example</code> a{" "}
-          <code>.env</code> y pon tu <code>VITE_SPOTIFY_CLIENT_ID</code> y{" "}
-          <code>VITE_GOOGLE_CLIENT_ID</code>. Revisa el README.
+          <code>.env</code> y pon tu <code>SPOTIFY_CLIENT_ID</code> y{" "}
+          <code>GOOGLE_CLIENT_ID</code>. Revisa el README.
         </div>
       )}
 
